@@ -3,8 +3,6 @@ package mx.omarmartinez.geoquiz
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import mx.omarmartinez.geoquiz.databinding.ActivityMainBinding
 
@@ -30,10 +28,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.trueButton.setOnClickListener { view: View ->
             checkAnswer(true, view)
+            changeResponseButtonState(false)
         }
 
         binding.falseButton.setOnClickListener { view: View ->
             checkAnswer(false, view)
+            changeResponseButtonState(false)
         }
 
         binding.nextButton.setOnClickListener {
@@ -67,8 +67,15 @@ class MainActivity : AppCompatActivity() {
         Snackbar.make(view, messageResId, Snackbar.LENGTH_LONG).show()
     }
 
+    private fun changeResponseButtonState(enable: Boolean){
+        binding.trueButton.isEnabled = enable
+        binding.falseButton.isEnabled = enable
+    }
+
     private fun updateQuestion(){
         val questionTextResId = questionBank[currentIndex].textResId
         binding.questionTextView.setText(questionTextResId)
+
+        changeResponseButtonState(true)
     }
 }
