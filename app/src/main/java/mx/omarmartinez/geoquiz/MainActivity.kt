@@ -3,6 +3,7 @@ package mx.omarmartinez.geoquiz
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import mx.omarmartinez.geoquiz.databinding.ActivityMainBinding
 
@@ -11,12 +12,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true)
+        Question(R.string.question_australia, answer = true, userAnswer = false),
+        Question(R.string.question_oceans, answer = true, userAnswer = false),
+        Question(R.string.question_mideast, answer = false, userAnswer = false),
+        Question(R.string.question_africa, answer = false, userAnswer = false),
+        Question(R.string.question_americas, answer = true, userAnswer = false),
+        Question(R.string.question_asia, answer = true, userAnswer = false)
     )
 
     private var currentIndex = 0
@@ -56,15 +57,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean, view: View){
-        val correctAnswer = questionBank[currentIndex].answer
+        val question = questionBank[currentIndex]
+        val correctAnswer = question.answer
+        val messageResId: Int
 
-        val messageResId = if(userAnswer == correctAnswer){
-            R.string.correct_toast
+        if(userAnswer == correctAnswer){
+            messageResId = R.string.correct_toast
+            question.userAnswer = true
         } else{
-            R.string.incorrect_toast
+            messageResId = R.string.incorrect_toast
+            question.userAnswer = false
         }
 
         Snackbar.make(view, messageResId, Snackbar.LENGTH_LONG).show()
+
+        if(currentIndex == questionBank.size -1){
+            var score = 0
+            var correctAnswers = 0
+            for (item in questionBank){
+                if(item.userAnswer){
+                    correctAnswers++
+                }
+            }
+
+            score = ((correctAnswers.toDouble() / questionBank.size) * 100).toInt()
+            val scoreMessage = getString(R.string.score_message, score)
+
+            Toast.makeText(this, scoreMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun changeResponseButtonState(enable: Boolean){
