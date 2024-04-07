@@ -41,7 +41,6 @@ class QuizViewModel : ViewModel() {
 
     fun checkScore(): Int{
         return if(currentIndex == questionBank.size -1){
-            var score = 0
             var correctAnswers = 0
             for (item in questionBank){
                 if(item.userAnswer){
