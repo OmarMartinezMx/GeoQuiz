@@ -1,12 +1,14 @@
-package mx.omarmartinez.geoquiz
+package mx.omarmartinez.geoquiz.viewmodel
 
-import android.util.Log
-import android.widget.Toast
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import mx.omarmartinez.geoquiz.Question
+import mx.omarmartinez.geoquiz.R
 
-private const val TAG = "QuizViewModel"
+const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
+const val IS_CHEATER_KEY = "IS_CHEATER_KEY"
 
-class QuizViewModel : ViewModel() {
+class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val questionBank = listOf(
         Question(R.string.question_australia, answer = true, userAnswer = false),
         Question(R.string.question_oceans, answer = true, userAnswer = false),
@@ -16,7 +18,13 @@ class QuizViewModel : ViewModel() {
         Question(R.string.question_asia, answer = true, userAnswer = false)
     )
 
-    private var currentIndex = 0
+    var isCheater: Boolean
+        get() = savedStateHandle[IS_CHEATER_KEY] ?: false
+        set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
+
+    private var currentIndex: Int
+        get() = savedStateHandle[CURRENT_INDEX_KEY] ?: 0
+        set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
 
     val currentQuestion: Question
         get() = questionBank[currentIndex]

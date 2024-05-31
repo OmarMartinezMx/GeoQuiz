@@ -1,5 +1,6 @@
 package mx.omarmartinez.geoquiz
 
+import mx.omarmartinez.geoquiz.viewmodel.QuizViewModel
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 
