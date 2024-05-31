@@ -7,6 +7,7 @@ import mx.omarmartinez.geoquiz.R
 
 const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
 const val IS_CHEATER_KEY = "IS_CHEATER_KEY"
+const val CHEAT_ATTEMPTS = "CHEAT_ATTEMPTS"
 
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val questionBank = listOf(
@@ -21,6 +22,10 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     var isCheater: Boolean
         get() = savedStateHandle[IS_CHEATER_KEY] ?: false
         set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
+
+    var cheatAttempts: Int
+        get() = savedStateHandle[CHEAT_ATTEMPTS] ?: 0
+        set(value) = savedStateHandle.set(CHEAT_ATTEMPTS, value)
 
     private var currentIndex: Int
         get() = savedStateHandle[CURRENT_INDEX_KEY] ?: 0

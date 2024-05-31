@@ -1,6 +1,9 @@
 package mx.omarmartinez.geoquiz
 
 import android.app.Activity
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,12 +11,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import com.google.android.material.snackbar.Snackbar
 import mx.omarmartinez.geoquiz.databinding.ActivityMainBinding
 import mx.omarmartinez.geoquiz.viewmodel.QuizViewModel
 
 private const val TAG = "MainActivity"
 private val EXTRA_ANSWER_SHOW = "mx.omarmartinez.geoquiz.answer_show"
+private val MaxCheatAttemps = 3
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +31,9 @@ class MainActivity : AppCompatActivity() {
     ){
         it -> if(it.resultCode == Activity.RESULT_OK){
         quizViewModel.isCheater = it.data?.getBooleanExtra(EXTRA_ANSWER_SHOW, false) ?: false
+        quizViewModel.cheatAttempts++
+        Log.i(TAG, "Cheat Attempts: ${quizViewModel.cheatAttempts}" )
+        handleCheatAttempts()
     }
     }
 
@@ -93,6 +101,19 @@ class MainActivity : AppCompatActivity() {
             val scoreMessage = getString(R.string.score_message, score)
 
             Toast.makeText(this, scoreMessage, Toast.LENGTH_LONG).show()
+
+            resetCheatAttempts()
+        }
+    }
+
+    private fun resetCheatAttempts(){
+        quizViewModel.cheatAttempts = 0
+        binding.cheatButton.isEnabled = true
+    }
+
+    private fun handleCheatAttempts(){
+        if(quizViewModel.cheatAttempts == MaxCheatAttemps){
+            binding.cheatButton.isEnabled = false
         }
     }
 
